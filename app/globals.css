@@ -1,26 +1,288 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #090908;
+  --paper: #f4f0e6;
+  --lime: #dff25a;
+  --muted: #a39e93;
+  --line: rgba(244, 240, 230, 0.14);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-lime: var(--lime);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--ink);
+  overflow-x: clip;
+  overscroll-behavior: none;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3a34;
+  border: 2px solid var(--ink);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--lime);
+}
+
+.grain {
+  position: fixed;
+  inset: -20%;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+
+.logo-marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .logo-marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.scroll-line {
+  display: block;
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(var(--lime), transparent);
+  transform-origin: top;
+  animation: scroll-line 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.pulse-dot {
+  box-shadow: 0 0 0 0 rgba(223, 242, 90, 0.65);
+  animation: pulse 2.4s ease-out infinite;
+}
+
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 8px rgba(223, 242, 90, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(223, 242, 90, 0);
+  }
+}
+
+.quote-in {
+  animation: quote-in 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.quote-set > * {
+  animation: quote-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.quote-set > *:nth-child(2) {
+  animation-delay: 90ms;
+}
+
+.quote-set > *:nth-child(3) {
+  animation-delay: 180ms;
+}
+
+.page-fade {
+  animation: page-fade 0.55s ease both;
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-rise {
+  animation: page-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes quote-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.service-row {
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .service-row:hover {
+    background: var(--lime);
+    color: var(--ink);
+  }
+
+  .service-row:hover .service-muted {
+    color: rgba(9, 9, 8, 0.68);
+  }
+
+  .service-row:hover .service-arrow {
+    transform: translate(3px, -3px);
+  }
+}
+
+.service-row:active {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+.service-row:active .service-muted {
+  color: rgba(9, 9, 8, 0.68);
+}
+
+.site-nav.is-scrolled {
+  background: rgba(9, 9, 8, 0.78);
+  border-bottom: 1px solid rgba(244, 240, 230, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+.menu-link {
+  animation: menu-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.review-progress {
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: review-progress 5s linear;
+}
+
+@keyframes review-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+
+  html.has-cursor input,
+  html.has-cursor textarea,
+  html.has-cursor select {
+    cursor: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .scroll-line,
+  .pulse-dot,
+  .quote-in,
+  .quote-set > *,
+  .menu-link,
+  .review-progress,
+  .page-fade,
+  .page-rise {
+    animation: none;
+  }
+
+  .review-progress {
+    transform: scaleX(1);
+  }
 }
