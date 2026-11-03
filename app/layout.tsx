@@ -43,7 +43,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <style>{`.preloader{display:none !important}`}</style>
         </noscript>
         {children}
-        <CustomCursor viewLabel={content.ui.cursorView} readLabel={content.ui.cursorRead} />
+        <CustomCursor
+          viewLabel={content.ui.cursorView}
+          readLabel={content.ui.cursorRead}
+          dragLabel={content.ui.cursorDrag}
+        />
       </body>
     </html>
   );

@@ -7,9 +7,11 @@ import { gsap } from "@/lib/gsap";
 export function CustomCursor({
   viewLabel,
   readLabel,
+  dragLabel,
 }: {
   viewLabel: string;
   readLabel: string;
+  dragLabel: string;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const bubble = useRef<HTMLDivElement>(null);
@@ -66,8 +68,8 @@ export function CustomCursor({
       if (next === mode) return;
       mode = next;
       if (next === "field") return;
-      if (next === "view" || next === "read") {
-        labelEl.textContent = next === "view" ? viewLabel : readLabel;
+      if (next === "view" || next === "read" || next === "drag") {
+        labelEl.textContent = next === "view" ? viewLabel : next === "read" ? readLabel : dragLabel;
         gsap.set(rootEl, { mixBlendMode: "normal" });
         gsap.to(bubbleEl, {
           width: 108,
@@ -148,7 +150,7 @@ export function CustomCursor({
       window.removeEventListener("blur", hide);
       gsap.killTweensOf([rootEl, bubbleEl, dotEl, labelEl]);
     };
-  }, [readLabel, viewLabel]);
+  }, [dragLabel, readLabel, viewLabel]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => refresh.current());

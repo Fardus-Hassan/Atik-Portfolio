@@ -26,6 +26,14 @@ export function SectionLabel({
   );
 }
 
+export function ChevronIcon({ flip = false }: { flip?: boolean }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden className={flip ? "rotate-180" : ""}>
+      <path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function DownloadIcon() {
   return (
     <svg

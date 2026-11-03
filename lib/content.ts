@@ -231,7 +231,7 @@ export type SiteContent = {
   };
   footer: { line: string; rights: string };
   socials: SocialLink[];
-  ui: { skip: string; close: string; back: string; cursorView: string; cursorRead: string };
+  ui: { skip: string; close: string; back: string; cursorView: string; cursorRead: string; cursorDrag: string };
   modules: SiteModule[];
 };
 
@@ -812,6 +812,7 @@ const siteContent: SiteContent = {
     back: "Back",
     cursorView: "View",
     cursorRead: "Read",
+    cursorDrag: "Drag",
   },
   modules: [
     { id: "marquee", enabled: true },

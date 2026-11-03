@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { SiteContent, VideoItem } from "@/lib/content";
-import { Arrow, gutter, SectionLabel } from "@/components/ui";
+import { Arrow, ChevronIcon, gutter, SectionLabel } from "@/components/ui";
 
 const thumb = (item: VideoItem, size: "maxresdefault" | "hqdefault") => `https://i.ytimg.com/vi/${item.youtubeId}/${size}.jpg`;
 
@@ -10,14 +10,6 @@ function PlayIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden className={className}>
       <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function Chevron({ flip = false }: { flip?: boolean }) {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden className={flip ? "rotate-180" : ""}>
-      <path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
@@ -68,7 +60,7 @@ export function Videos({ videos }: { videos: SiteContent["videos"] }) {
             onClick={() => step(-1)}
             className="grid h-11 w-11 place-items-center rounded-full border border-paper/20 transition-colors hover:border-lime hover:bg-lime hover:text-ink"
           >
-            <Chevron />
+            <ChevronIcon />
           </button>
           <button
             type="button"
@@ -76,7 +68,7 @@ export function Videos({ videos }: { videos: SiteContent["videos"] }) {
             onClick={() => step(1)}
             className="grid h-11 w-11 place-items-center rounded-full border border-paper/20 transition-colors hover:border-lime hover:bg-lime hover:text-ink"
           >
-            <Chevron flip />
+            <ChevronIcon flip />
           </button>
           {videos.channelHref ? (
             <a
