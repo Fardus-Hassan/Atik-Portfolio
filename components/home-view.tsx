@@ -4,7 +4,6 @@ import { useCallback, useState } from "react";
 import type { CaseStudy, DetailView, ServiceItem, SiteContent } from "@/lib/content";
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
-import { CustomCursor } from "@/components/custom-cursor";
 import { DetailOverlay } from "@/components/detail-overlay";
 import { Achievements } from "@/components/achievements";
 import { Footer } from "@/components/footer";
@@ -66,7 +65,6 @@ export function HomeView({ content }: { content: SiteContent }) {
         {content.ui.skip}
       </a>
       <div className="grain" aria-hidden />
-      <CustomCursor viewLabel={content.ui.cursorView} readLabel={content.ui.cursorRead} />
       <Preloader
         name={content.profile.name}
         role={content.profile.role}

@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 
@@ -14,6 +15,8 @@ export function CustomCursor({
   const bubble = useRef<HTMLDivElement>(null);
   const dot = useRef<HTMLDivElement>(null);
   const label = useRef<HTMLSpanElement>(null);
+  const refresh = useRef<() => void>(() => {});
+  const pathname = usePathname();
 
   useEffect(() => {
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -100,16 +103,21 @@ export function CustomCursor({
       if (target.closest("input, textarea, select")) return "field";
       const marked = target.closest<HTMLElement>("[data-cursor]");
       if (marked?.dataset.cursor) return marked.dataset.cursor;
-      if (target.closest("a, button")) return "link";
+      if (target.closest('a, button, [role="button"], summary, label[for]')) return "link";
       return "";
     };
 
     let placed = false;
+    let last = { x: 0, y: 0 };
+    refresh.current = () => {
+      if (placed) apply(modeFrom(document.elementFromPoint(last.x, last.y)));
+    };
     const onMove = (event: MouseEvent) => {
       if (!placed) {
         placed = true;
         gsap.set([bubbleEl, dotEl], { x: event.clientX, y: event.clientY });
       }
+      last = { x: event.clientX, y: event.clientY };
       moveX(event.clientX);
       moveY(event.clientY);
       dotX(event.clientX);
@@ -131,6 +139,7 @@ export function CustomCursor({
     window.addEventListener("blur", hide);
 
     return () => {
+      refresh.current = () => {};
       document.documentElement.classList.remove("has-cursor");
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("pointerdown", onMove as EventListener);
@@ -140,6 +149,11 @@ export function CustomCursor({
       gsap.killTweensOf([rootEl, bubbleEl, dotEl, labelEl]);
     };
   }, [readLabel, viewLabel]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => refresh.current());
+    return () => cancelAnimationFrame(frame);
+  }, [pathname]);
 
   return (
     <div ref={root} className="pointer-events-none fixed inset-0 z-[120]" aria-hidden>

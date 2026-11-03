@@ -281,6 +281,27 @@ body {
   }
 }
 
+@layer base {
+  a[href],
+  button,
+  [role="button"],
+  summary,
+  label[for],
+  select,
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="submit"],
+  input[type="button"],
+  input[type="file"] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   html.has-cursor,
   html.has-cursor * {

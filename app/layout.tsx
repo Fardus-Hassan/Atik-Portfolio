@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Instrument_Serif, Outfit } from "next/font/google";
+import { CustomCursor } from "@/components/custom-cursor";
 import { getSiteContent } from "@/lib/content";
 import "./globals.css";
 
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <style>{`.preloader{display:none !important}`}</style>
         </noscript>
         {children}
+        <CustomCursor viewLabel={content.ui.cursorView} readLabel={content.ui.cursorRead} />
       </body>
     </html>
   );
