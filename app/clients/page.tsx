@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BackButton } from "@/components/back-button";
 import { ReviewCard } from "@/components/review-card";
 import { SectionLabel } from "@/components/ui";
@@ -19,9 +20,9 @@ export default function ClientsPage() {
   return (
     <main className="min-h-screen bg-paper text-ink">
       <header className={`${pad} page-fade sticky top-0 z-10 flex items-center justify-between border-b border-ink/10 bg-paper/90 py-4 backdrop-blur-md`}>
-        <a href="/" className="min-h-11 text-sm font-medium tracking-tight">
+        <Link href="/" className="min-h-11 text-sm font-medium tracking-tight">
           {profile.name}
-        </a>
+        </Link>
         <BackButton label={content.ui.back} />
       </header>
 

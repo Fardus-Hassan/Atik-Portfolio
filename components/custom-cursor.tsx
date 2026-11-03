@@ -25,8 +25,8 @@ export function CustomCursor({
     if (!fine || reduced || !bubbleEl || !dotEl || !rootEl || !labelEl) return;
 
     document.documentElement.classList.add("has-cursor");
-    gsap.set(rootEl, { autoAlpha: 0 });
-    gsap.set(bubbleEl, { xPercent: -50, yPercent: -50, width: 40, height: 40, mixBlendMode: "difference" });
+    gsap.set(rootEl, { autoAlpha: 0, mixBlendMode: "difference" });
+    gsap.set(bubbleEl, { xPercent: -50, yPercent: -50, width: 40, height: 40 });
     gsap.set(dotEl, { xPercent: -50, yPercent: -50 });
     gsap.set(labelEl, { autoAlpha: 0 });
 
@@ -36,14 +36,21 @@ export function CustomCursor({
     const dotY = gsap.quickTo(dotEl, "y", { duration: 0.12, ease: "power2.out" });
 
     let mode = "";
+    let visible = false;
+
+    const show = (value: boolean) => {
+      if (visible === value) return;
+      visible = value;
+      gsap.to(rootEl, { autoAlpha: value ? 1 : 0, duration: 0.2, overwrite: "auto" });
+    };
 
     const rest = () => {
+      gsap.set(rootEl, { mixBlendMode: "difference" });
       gsap.to(bubbleEl, {
         width: 40,
         height: 40,
         backgroundColor: "transparent",
         borderColor: "#ffffff",
-        mixBlendMode: "difference",
         duration: 0.35,
         ease: "power3.out",
       });
@@ -52,21 +59,18 @@ export function CustomCursor({
     };
 
     const apply = (next: string) => {
+      show(next !== "field");
       if (next === mode) return;
       mode = next;
-      if (next === "field") {
-        gsap.to(rootEl, { autoAlpha: 0, duration: 0.2 });
-        return;
-      }
-      gsap.to(rootEl, { autoAlpha: 1, duration: 0.2 });
+      if (next === "field") return;
       if (next === "view" || next === "read") {
         labelEl.textContent = next === "view" ? viewLabel : readLabel;
+        gsap.set(rootEl, { mixBlendMode: "normal" });
         gsap.to(bubbleEl, {
           width: 108,
           height: 108,
           backgroundColor: "#dff25a",
           borderColor: "#dff25a",
-          mixBlendMode: "normal",
           duration: 0.35,
           ease: "power3.out",
         });
@@ -75,12 +79,12 @@ export function CustomCursor({
         return;
       }
       if (next === "link") {
+        gsap.set(rootEl, { mixBlendMode: "difference" });
         gsap.to(bubbleEl, {
           width: 64,
           height: 64,
           backgroundColor: "transparent",
           borderColor: "#ffffff",
-          mixBlendMode: "difference",
           duration: 0.3,
           ease: "power3.out",
         });
@@ -100,7 +104,12 @@ export function CustomCursor({
       return "";
     };
 
+    let placed = false;
     const onMove = (event: MouseEvent) => {
+      if (!placed) {
+        placed = true;
+        gsap.set([bubbleEl, dotEl], { x: event.clientX, y: event.clientY });
+      }
       moveX(event.clientX);
       moveY(event.clientY);
       dotX(event.clientX);
@@ -108,20 +117,32 @@ export function CustomCursor({
       apply(modeFrom(event.target));
     };
 
-    const hide = () => gsap.to(rootEl, { autoAlpha: 0, duration: 0.2 });
+    const hide = () => show(false);
+    const onOut = (event: MouseEvent) => {
+      if (!event.relatedTarget || (event.relatedTarget instanceof Element && event.relatedTarget.closest("iframe"))) {
+        hide();
+      }
+    };
 
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onMove as EventListener, { passive: true });
+    document.addEventListener("mouseout", onOut);
     document.documentElement.addEventListener("mouseleave", hide);
+    window.addEventListener("blur", hide);
 
     return () => {
       document.documentElement.classList.remove("has-cursor");
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("pointerdown", onMove as EventListener);
+      document.removeEventListener("mouseout", onOut);
       document.documentElement.removeEventListener("mouseleave", hide);
+      window.removeEventListener("blur", hide);
+      gsap.killTweensOf([rootEl, bubbleEl, dotEl, labelEl]);
     };
   }, [readLabel, viewLabel]);
 
   return (
-    <div ref={root} className="pointer-events-none fixed inset-0 z-[80]" aria-hidden>
+    <div ref={root} className="pointer-events-none fixed inset-0 z-[120]" aria-hidden>
       <div
         ref={bubble}
         className="absolute left-0 top-0 grid place-items-center rounded-full border border-white"
@@ -131,7 +152,7 @@ export function CustomCursor({
           className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink"
         />
       </div>
-      <div ref={dot} className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-white mix-blend-difference" />
+      <div ref={dot} className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-white" />
     </div>
   );
 }

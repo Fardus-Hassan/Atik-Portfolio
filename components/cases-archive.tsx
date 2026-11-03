@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import type { CaseStudy, DetailView, SiteContent } from "@/lib/content";
 import { BackButton } from "@/components/back-button";
@@ -35,9 +36,9 @@ export function CasesArchive({ content }: { content: SiteContent }) {
         <header
           className={`${pad} page-fade sticky top-0 z-10 flex items-center justify-between border-b border-line bg-ink/90 py-4 backdrop-blur-md`}
         >
-          <a href="/" className="min-h-11 text-sm font-medium tracking-tight">
+          <Link href="/" className="min-h-11 text-sm font-medium tracking-tight">
             {profile.name}
-          </a>
+          </Link>
           <BackButton label={ui.back} />
         </header>
 

@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import type { SiteContent } from "@/lib/content";
-import { gsap, useGSAP } from "@/lib/gsap";
-import { scrollToId } from "@/lib/scroll";
-import { CoverImage } from "@/components/media";
+import { gsap } from "@/lib/gsap";
+import { scrollToId } from "@/lib/scroll";import { CoverImage } from "@/components/media";
 import { Arrow, buttonClass, CountUp, gutter, Magnetic } from "@/components/ui";
 
 export function Hero({
@@ -19,36 +18,41 @@ export function Hero({
   const portrait = about.portrait;
   const hasPhoto = Boolean(portrait.image);
 
-  useGSAP(
-    () => {
-      gsap.set("[data-hero-line]", { yPercent: 110 });
-      gsap.set("[data-hero-fade]", { autoAlpha: 0, y: 18 });
-      if (root.current?.querySelector("[data-portrait-inner]")) {
-        gsap.set("[data-portrait-inner]", { scale: 1.12 });
-      }
-    },
-    { scope: root },
-  );
+  // Plain effects instead of useGSAP: its revert restores the hidden pre-intro state when the route
+  // is hidden and shown again on back navigation. Both effects re-run on that reveal, so the intro replays.
+  useLayoutEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const lines = el.querySelectorAll("[data-hero-line]");
+    const fades = el.querySelectorAll("[data-hero-fade]");
+    const photoInner = el.querySelector("[data-portrait-inner]");
+    gsap.set(lines, { yPercent: 110 });
+    gsap.set(fades, { autoAlpha: 0, y: 18 });
+    if (photoInner) gsap.set(photoInner, { scale: 1.12 });
+  }, []);
 
-  useGSAP(
-    () => {
-      if (!booted) return;
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const photoInner = root.current?.querySelector("[data-portrait-inner]");
-      if (reduced) {
-        gsap.set("[data-hero-line]", { yPercent: 0 });
-        gsap.set("[data-hero-fade]", { autoAlpha: 1, y: 0 });
-        if (photoInner) gsap.set(photoInner, { scale: 1 });
-        return;
-      }
+  useEffect(() => {
+    const el = root.current;
+    if (!el || !booted) return;
+    const lines = el.querySelectorAll("[data-hero-line]");
+    const fades = el.querySelectorAll("[data-hero-fade]");
+    const photoInner = el.querySelector("[data-portrait-inner]");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      gsap.set(lines, { yPercent: 0 });
+      gsap.set(fades, { autoAlpha: 1, y: 0 });
+      if (photoInner) gsap.set(photoInner, { scale: 1 });
+      return;
+    }
 
-      const timeline = gsap.timeline({ defaults: { ease: "power4.out" } });
-      timeline.to("[data-hero-line]", { yPercent: 0, duration: 1.15, stagger: 0.08 });
-      if (photoInner) timeline.to(photoInner, { scale: 1, duration: 1.8, ease: "power2.out" }, 0);
-      timeline.to("[data-hero-fade]", { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.06 }, 0.15);
-    },
-    { dependencies: [booted], scope: root },
-  );
+    const timeline = gsap.timeline({ defaults: { ease: "power4.out" } });
+    timeline.to(lines, { yPercent: 0, duration: 1.15, stagger: 0.08 });
+    if (photoInner) timeline.to(photoInner, { scale: 1, duration: 1.8, ease: "power2.out" }, 0);
+    timeline.to(fades, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.06 }, 0.15);
+    return () => {
+      timeline.progress(1).kill();
+    };
+  }, [booted]);
 
   return (
     <section

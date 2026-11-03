@@ -3,7 +3,9 @@
  * Swap a photo by replacing the file in public/images, or by changing `src`.
  * Keep the same shape: portrait is tall (4:5), case-study photos are wide (3:2),
  * client photos are square. object-cover crops them, so a new photo still fills the frame.
- * The same portrait is used on the loading screen, the hero, and the about section.
+ * The same portrait is used in the hero and the about section.
+ * Videos only need the YouTube id (the part after watch?v=). The thumbnail comes from YouTube.
+ * The CV file lives in public/cv. Set `cv` to null to hide every download button.
  * Brand logos are wide and short, on a transparent background.
  * The marquee shows them at one height on the light band, so a new file still sits on the line.
  * When Express + Postgres are connected, keep this shape and replace getSiteContent() with a fetch.
@@ -17,7 +19,18 @@ export type ModuleId =
   | "achievements"
   | "testimonials"
   | "cases"
+  | "videos"
   | "contact";
+
+export type NavLink =
+  | { label: string; id: ModuleId | "content" }
+  | { label: string; href: string };
+
+export type VideoItem = {
+  youtubeId: string;
+  title: string;
+  meta: string;
+};
 
 export type SiteModule = {
   id: ModuleId;
@@ -77,6 +90,23 @@ export type DetailView = {
   blocks: { label?: string; text: string }[];
 };
 
+export type SocialPlatform =
+  | "linkedin"
+  | "facebook"
+  | "instagram"
+  | "youtube"
+  | "tiktok"
+  | "x"
+  | "whatsapp"
+  | "email";
+
+export type SocialLink = {
+  platform: SocialPlatform;
+  label: string;
+  href: string;
+  enabled: boolean;
+};
+
 export type SiteContent = {
   meta: { title: string; description: string };
   profile: {
@@ -87,9 +117,11 @@ export type SiteContent = {
     availability: string;
     year: string;
     mark: string;
+    cv: { label: string; href: string; fileName: string; meta: string } | null;
   };
+  loader: { words: string[]; tag: string; loading: string };
   nav: {
-    links: { label: string; id: ModuleId | "content" }[];
+    links: NavLink[];
     cta: string;
     ctaTarget: ModuleId;
     menu: string;
@@ -161,6 +193,24 @@ export type SiteContent = {
     seeAll: string;
     pageIntro: string;
   };
+  videos: {
+    index: string;
+    label: string;
+    intro: string;
+    playLabel: string;
+    channelLabel: string;
+    channelHref: string;
+    items: VideoItem[];
+  };
+  courses: {
+    label: string;
+    status: string;
+    title: string;
+    intro: string;
+    topics: string[];
+    cta: string;
+    ctaHref: string;
+  };
   contact: {
     index: string;
     label: string;
@@ -180,7 +230,7 @@ export type SiteContent = {
     errors: { name: string; email: string; message: string };
   };
   footer: { line: string; rights: string };
-  socials: { label: string; href: string }[];
+  socials: SocialLink[];
   ui: { skip: string; close: string; back: string; cursorView: string; cursorRead: string };
   modules: SiteModule[];
 };
@@ -199,6 +249,17 @@ const siteContent: SiteContent = {
     availability: "Open for a few retainers",
     year: "2026",
     mark: "Atik",
+    cv: {
+      label: "Download CV",
+      href: "/cv/atik-cv.pdf",
+      fileName: "Atik-CV.pdf",
+      meta: "PDF · Updated 2026",
+    },
+  },
+  loader: {
+    words: ["Strategy", "Media", "Measurement", "Revenue"],
+    tag: "Portfolio",
+    loading: "Loading",
   },
   nav: {
     links: [
@@ -207,6 +268,7 @@ const siteContent: SiteContent = {
       { label: "Expertise", id: "services" },
       { label: "About", id: "about" },
       { label: "Case studies", id: "cases" },
+      { label: "Courses", href: "/courses" },
     ],
     cta: "Start a project",
     ctaTarget: "contact",
@@ -641,8 +703,48 @@ const siteContent: SiteContent = {
     seeAll: "See all",
     pageIntro: "Every engagement, from the brief to the number that moved.",
   },
-  contact: {
+  videos: {
     index: "07",
+    label: "Videos",
+    intro: "Talks and breakdowns worth the watch. Press play, the rest of the page waits.",
+    playLabel: "Play",
+    channelLabel: "YouTube channel",
+    channelHref: "https://www.youtube.com",
+    items: [
+      {
+        youtubeId: "qp0HIF3SfI4",
+        title: "How great leaders inspire action",
+        meta: "Talk · 18 min",
+      },
+      {
+        youtubeId: "xBIVlM435Zg",
+        title: "How to get your ideas to spread",
+        meta: "Talk · 17 min",
+      },
+      {
+        youtubeId: "fW8amMCVAJQ",
+        title: "First follower: leadership lessons",
+        meta: "Short · 3 min",
+      },
+      {
+        youtubeId: "Ks-_Mh1QhMc",
+        title: "Your body language may shape who you are",
+        meta: "Talk · 21 min",
+      },
+    ],
+  },
+  courses: {
+    label: "Courses",
+    status: "Upcoming",
+    title: "Courses are on the way.",
+    intro:
+      "Practical programs on paid media, measurement, and building a growth system a small team can run. The first cohort opens soon.",
+    topics: ["Performance media", "GA4 and tracking", "Offer and landing pages", "Weekly growth review"],
+    cta: "Get notified",
+    ctaHref: "mailto:hello@atik.studio?subject=Course%20updates",
+  },
+  contact: {
+    index: "08",
     label: "Contact",
     title: "Tell me what you want to grow.",
     lede: "A short note is enough. I read every one and reply myself.",
@@ -675,8 +777,14 @@ const siteContent: SiteContent = {
     rights: "All rights reserved.",
   },
   socials: [
-    { label: "LinkedIn", href: "https://www.linkedin.com" },
-    { label: "Email", href: "mailto:hello@atik.studio" },
+    { platform: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com", enabled: true },
+    { platform: "facebook", label: "Facebook", href: "https://www.facebook.com", enabled: true },
+    { platform: "instagram", label: "Instagram", href: "https://www.instagram.com", enabled: true },
+    { platform: "youtube", label: "YouTube", href: "https://www.youtube.com", enabled: true },
+    { platform: "tiktok", label: "TikTok", href: "https://www.tiktok.com", enabled: true },
+    { platform: "x", label: "X", href: "https://x.com", enabled: true },
+    { platform: "whatsapp", label: "WhatsApp", href: "https://wa.me/10000000000", enabled: true },
+    { platform: "email", label: "Email", href: "mailto:hello@atik.studio", enabled: true },
   ],
   ui: {
     skip: "Skip to content",
@@ -693,6 +801,7 @@ const siteContent: SiteContent = {
     { id: "achievements", enabled: true },
     { id: "testimonials", enabled: true },
     { id: "cases", enabled: true },
+    { id: "videos", enabled: true },
     { id: "contact", enabled: true },
   ],
 };

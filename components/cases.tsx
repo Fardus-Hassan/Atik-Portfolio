@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { CaseStudy, SiteContent } from "@/lib/content";
 import { CoverImage } from "@/components/media";
 import { gutter, SectionLabel } from "@/components/ui";
-
 export function CaseCard({
   item,
   wide = false,
@@ -65,8 +64,7 @@ export function Cases({
           <p className="mt-4 text-base leading-relaxed text-muted">{cases.intro}</p>
         </div>
         <Link
-          href="/cases"
-          className="inline-flex min-h-11 shrink-0 items-center gap-2 border-b border-paper/30 pb-0.5 text-sm tracking-wide"
+          href="/cases"          className="inline-flex min-h-11 shrink-0 items-center gap-2 border-b border-paper/30 pb-0.5 text-sm tracking-wide"
         >
           {cases.seeAll}
           <span aria-hidden>→</span>

@@ -5,7 +5,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { SiteContent } from "@/lib/content";
 import { ReviewCard } from "@/components/review-card";
 import { gutter, SectionLabel } from "@/components/ui";
-
 const INTERVAL = 5000;
 
 export function Testimonials({
@@ -79,8 +78,7 @@ export function Testimonials({
             </p>
           </div>
           <Link
-            href="/clients"
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 border-b border-ink/25 pb-0.5 text-sm tracking-wide"
+            href="/clients"            className="inline-flex min-h-11 shrink-0 items-center gap-2 border-b border-ink/25 pb-0.5 text-sm tracking-wide"
           >
             {testimonials.seeAll}
             <span aria-hidden>→</span>

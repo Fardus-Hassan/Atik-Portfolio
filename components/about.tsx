@@ -4,9 +4,9 @@ import { useRef } from "react";
 import type { SiteContent } from "@/lib/content";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { CoverImage } from "@/components/media";
-import { gutter, SectionLabel } from "@/components/ui";
+import { DownloadIcon, gutter, SectionLabel } from "@/components/ui";
 
-export function About({ about }: { about: SiteContent["about"] }) {
+export function About({ about, cv }: { about: SiteContent["about"]; cv: SiteContent["profile"]["cv"] }) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -87,6 +87,25 @@ export function About({ about }: { about: SiteContent["about"] }) {
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+
+            {cv ? (
+              <a
+                href={cv.href}
+                download={cv.fileName}
+                data-cursor="link"
+                className="group flex items-center justify-between gap-6 rounded-[1.25rem] border border-line p-5 transition-colors duration-300 hover:border-lime/50 hover:bg-white/[0.03] sm:p-6"
+              >
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-muted">{cv.meta}</p>
+                  <p className="mt-2 font-serif text-[clamp(1.8rem,4vw,2.4rem)] leading-none tracking-[-0.02em]">
+                    {cv.label}
+                  </p>
+                </div>
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-lime text-ink transition-transform duration-300 group-hover:scale-110">
+                  <DownloadIcon />
+                </span>
+              </a>
+            ) : null}
 
             <div>
               <p className="text-[11px] uppercase tracking-[0.2em] text-muted">{about.principlesTitle}</p>

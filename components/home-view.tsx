@@ -16,6 +16,7 @@ import { Preloader } from "@/components/preloader";
 import { Services } from "@/components/services";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { Testimonials } from "@/components/testimonials";
+import { Videos } from "@/components/videos";
 import { Work } from "@/components/work";
 import { scrollToId } from "@/lib/scroll";
 
@@ -69,8 +70,8 @@ export function HomeView({ content }: { content: SiteContent }) {
       <Preloader
         name={content.profile.name}
         role={content.profile.role}
-        image={content.about.portrait.image}
-        imagePosition={content.about.portrait.position}
+        year={content.profile.year}
+        loader={content.loader}
         onDone={() => setBooted(true)}
       />
       <Nav content={content} booted={booted} />
@@ -85,7 +86,7 @@ export function HomeView({ content }: { content: SiteContent }) {
                 case "marquee":
                   return <Marquee key={module.id} marquee={content.marquee} />;
                 case "about":
-                  return <About key={module.id} about={content.about} />;
+                  return <About key={module.id} about={content.about} cv={content.profile.cv} />;
                 case "services":
                   return <Services key={module.id} services={content.services} onOpen={openService} />;
                 case "work":
@@ -103,6 +104,8 @@ export function HomeView({ content }: { content: SiteContent }) {
                       onOpen={openWork}
                     />
                   );
+                case "videos":
+                  return <Videos key={module.id} videos={content.videos} />;
                 case "contact":
                   return (
                     <Contact key={module.id} contact={content.contact} email={content.profile.email} />
