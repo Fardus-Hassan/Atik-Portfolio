@@ -1,6 +1,6 @@
 import { HomeView } from "@/components/home-view";
-import { getSiteContent } from "@/lib/content";
+import { getSiteContent } from "@/lib/site";
 
-export default function Home() {
-  return <HomeView content={getSiteContent()} />;
+export default async function Home() {
+  return <HomeView content={await getSiteContent()} />;
 }

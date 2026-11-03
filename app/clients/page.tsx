@@ -3,18 +3,17 @@ import Link from "next/link";
 import { BackButton } from "@/components/back-button";
 import { ReviewCard } from "@/components/review-card";
 import { SectionLabel } from "@/components/ui";
-import { getSiteContent } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
+import { getSiteContent } from "@/lib/site";
 
 const pad = "px-4 sm:px-6 md:px-10 lg:px-14";
 
-const content = getSiteContent();
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadata(await getSiteContent(), "clients", "/clients");
+}
 
-export const metadata: Metadata = {
-  title: `${content.testimonials.label} · ${content.profile.name}`,
-  description: content.testimonials.pageIntro,
-};
-
-export default function ClientsPage() {
+export default async function ClientsPage() {
+  const content = await getSiteContent();
   const { testimonials, profile } = content;
 
   return (

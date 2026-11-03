@@ -19,6 +19,7 @@ export function CustomCursor({
   const label = useRef<HTMLSpanElement>(null);
   const refresh = useRef<() => void>(() => {});
   const pathname = usePathname();
+  const disabled = pathname.startsWith("/admin");
 
   useEffect(() => {
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -27,7 +28,7 @@ export function CustomCursor({
     const dotEl = dot.current;
     const rootEl = root.current;
     const labelEl = label.current;
-    if (!fine || reduced || !bubbleEl || !dotEl || !rootEl || !labelEl) return;
+    if (disabled || !fine || reduced || !bubbleEl || !dotEl || !rootEl || !labelEl) return;
 
     document.documentElement.classList.add("has-cursor");
     gsap.set(rootEl, { autoAlpha: 0, mixBlendMode: "difference" });
@@ -150,12 +151,14 @@ export function CustomCursor({
       window.removeEventListener("blur", hide);
       gsap.killTweensOf([rootEl, bubbleEl, dotEl, labelEl]);
     };
-  }, [dragLabel, readLabel, viewLabel]);
+  }, [disabled, dragLabel, readLabel, viewLabel]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => refresh.current());
     return () => cancelAnimationFrame(frame);
   }, [pathname]);
+
+  if (disabled) return null;
 
   return (
     <div ref={root} className="pointer-events-none fixed inset-0 z-[120]" aria-hidden>

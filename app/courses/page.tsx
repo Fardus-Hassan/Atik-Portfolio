@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BackButton } from "@/components/back-button";
-import { getSiteContent } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
+import { getSiteContent } from "@/lib/site";
 
 const pad = "px-4 sm:px-6 md:px-10 lg:px-14";
 
-const content = getSiteContent();
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadata(await getSiteContent(), "courses", "/courses");
+}
 
-export const metadata: Metadata = {
-  title: `${content.courses.label} · ${content.profile.name}`,
-  description: content.courses.intro,
-};
-
-export default function CoursesPage() {
+export default async function CoursesPage() {
+  const content = await getSiteContent();
   const { courses, profile } = content;
   const ring = `${courses.label} ${courses.status} · `.repeat(2);
 

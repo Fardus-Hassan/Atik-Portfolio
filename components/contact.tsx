@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
+import { submitContact } from "@/app/actions/contact";
 import type { SiteContent } from "@/lib/content";
 import { gutter, SectionLabel } from "@/components/ui";
 
@@ -14,22 +15,48 @@ export function Contact({
   email: string;
 }) {
   const [sent, setSent] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (pending) return;
     const data = new FormData(event.currentTarget);
-    const name = String(data.get("name") ?? "").trim();
-    const emailValue = String(data.get("email") ?? "").trim();
-    const message = String(data.get("message") ?? "").trim();
+    const value = (key: string) => String(data.get(key) ?? "").trim();
+    const name = value("name");
+    const emailValue = value("email");
+    const message = value("message");
     const next: Errors = {};
     if (!name) next.name = contact.errors.name;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) next.email = contact.errors.email;
     if (!message) next.message = contact.errors.message;
     setErrors(next);
+    setFailed(false);
     if (Object.keys(next).length) return;
-    // The Express endpoint will receive this payload later.
-    setSent(true);
+
+    setPending(true);
+    const result = await submitContact({
+      name,
+      email: emailValue,
+      message,
+      phone: value("phone"),
+      company: value("company"),
+      website: String(data.get("website") ?? ""),
+    });
+    setPending(false);
+    if (result.ok) {
+      setSent(true);
+      return;
+    }
+    if (result.fields) {
+      setErrors({
+        name: result.fields.name ? contact.errors.name : undefined,
+        email: result.fields.email ? contact.errors.email : undefined,
+        message: result.fields.message ? contact.errors.message : undefined,
+      });
+    }
+    setFailed(true);
   };
 
   return (
@@ -113,10 +140,28 @@ export function Contact({
                     className={`${inputClass} resize-none`}
                   />
                 </Field>
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                />
+                {failed ? (
+                  <p role="alert" className="text-sm text-[#e2b1a8]">
+                    {contact.failure}
+                  </p>
+                ) : null}
                 <button
                   type="submit"
-                  className="mt-2 inline-flex min-h-11 w-fit items-center rounded-full border border-paper/25 px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-paper hover:text-ink"
+                  disabled={pending}
+                  aria-busy={pending}
+                  className="mt-2 inline-flex min-h-11 w-fit items-center gap-3 rounded-full border border-paper/25 px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-paper hover:text-ink disabled:cursor-wait disabled:opacity-60"
                 >
+                  {pending ? (
+                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden />
+                  ) : null}
                   {contact.submit}
                 </button>
               </form>
