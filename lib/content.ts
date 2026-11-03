@@ -731,6 +731,26 @@ const siteContent: SiteContent = {
         title: "Your body language may shape who you are",
         meta: "Talk · 21 min",
       },
+      {
+        youtubeId: "iueVZJVEmEs",
+        title: "Perspective is everything",
+        meta: "Talk · 18 min",
+      },
+      {
+        youtubeId: "rrkrvAUbU9Y",
+        title: "The puzzle of motivation",
+        meta: "Talk · 18 min",
+      },
+      {
+        youtubeId: "arj7oStGLkU",
+        title: "Inside the mind of a master procrastinator",
+        meta: "Talk · 14 min",
+      },
+      {
+        youtubeId: "H14bBuluwB8",
+        title: "Grit: the power of passion and perseverance",
+        meta: "Talk · 6 min",
+      },
     ],
   },
   courses: {

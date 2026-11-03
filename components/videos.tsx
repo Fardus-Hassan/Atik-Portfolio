@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { SiteContent, VideoItem } from "@/lib/content";
 import { Arrow, gutter, SectionLabel } from "@/components/ui";
 
-const thumb = (item: VideoItem, size: "maxresdefault" | "hqdefault") =>
-  `https://i.ytimg.com/vi/${item.youtubeId}/${size}.jpg`;
+const thumb = (item: VideoItem, size: "maxresdefault" | "hqdefault") => `https://i.ytimg.com/vi/${item.youtubeId}/${size}.jpg`;
 
 function PlayIcon({ className = "" }: { className?: string }) {
   return (
@@ -32,9 +31,19 @@ export function Videos({ videos }: { videos: SiteContent["videos"] }) {
 
   useEffect(() => {
     const el = list.current;
-    if (!el || el.scrollWidth <= el.clientWidth) return;
-    const item = el.children[active] as HTMLElement | undefined;
-    if (item) el.scrollTo({ left: item.offsetLeft - el.offsetLeft, behavior: "smooth" });
+    const item = el?.children[active] as HTMLElement | undefined;
+    if (!el || !item) return;
+    if (el.scrollWidth > el.clientWidth) {
+      el.scrollTo({
+        left: item.offsetLeft - el.offsetLeft,
+        behavior: "smooth",
+      });
+    } else if (el.scrollHeight > el.clientHeight) {
+      el.scrollTo({
+        top: item.offsetTop - (el.clientHeight - item.offsetHeight) / 2,
+        behavior: "smooth",
+      });
+    }
   }, [active]);
 
   if (!current) return null;
@@ -126,47 +135,50 @@ export function Videos({ videos }: { videos: SiteContent["videos"] }) {
           </div>
         </div>
 
-        <ul
-          ref={list}
-          className="relative -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 [scrollbar-width:none] lg:col-span-4 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
-        >
-          {items.map((item, index) => {
-            const isActive = index === active;
-            return (
-              <li key={item.youtubeId} className="w-[72%] shrink-0 snap-start sm:w-[42%] lg:w-auto">
-                <button
-                  type="button"
-                  onClick={() => setActive(index)}
-                  aria-current={isActive}
-                  className={`group flex w-full flex-col gap-3 rounded-[1.1rem] border p-2.5 text-left transition-colors duration-300 lg:flex-row lg:items-center lg:gap-4 ${
-                    isActive ? "border-lime/60 bg-white/[0.04]" : "border-line hover:border-paper/30"
-                  }`}
-                >
-                  <span className="relative block aspect-video w-full shrink-0 overflow-hidden rounded-[0.8rem] bg-black lg:w-40">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- YouTube thumbnails are remote and not in next.config images */}
-                    <img
-                      src={thumb(item, "hqdefault")}
-                      alt=""
-                      loading="lazy"
-                      className={`h-full w-full object-cover transition duration-500 ${isActive ? "" : "opacity-70 group-hover:opacity-100"}`}
-                    />
-                    <span
-                      className={`absolute bottom-2 left-2 grid h-7 w-7 place-items-center rounded-full ${isActive ? "bg-lime text-ink" : "bg-black/60 text-white"}`}
-                    >
-                      <PlayIcon className="ml-0.5 h-3.5 w-3.5" />
+        <div className="relative min-w-0 lg:col-span-4">
+          <ul
+            ref={list}
+            className="relative -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 [scrollbar-width:none] lg:absolute lg:inset-0 lg:mx-0 lg:snap-y lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden lg:overscroll-contain lg:px-0 lg:pb-10 [&::-webkit-scrollbar]:hidden"
+          >
+            {items.map((item, index) => {
+              const isActive = index === active;
+              return (
+                <li key={item.youtubeId} className="w-[72%] shrink-0 snap-start sm:w-[42%] lg:w-auto">
+                  <button
+                    type="button"
+                    onClick={() => setActive(index)}
+                    aria-current={isActive}
+                    className={`group flex w-full flex-col gap-3 rounded-[1.1rem] border p-2.5 text-left transition-colors duration-300 lg:flex-row lg:items-center lg:gap-4 ${
+                      isActive ? "border-lime/60 bg-white/[0.04]" : "border-line hover:border-paper/30"
+                    }`}
+                  >
+                    <span className="relative block aspect-video w-full shrink-0 overflow-hidden rounded-[0.8rem] bg-black lg:w-40">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- YouTube thumbnails are remote and not in next.config images */}
+                      <img
+                        src={thumb(item, "hqdefault")}
+                        alt=""
+                        loading="lazy"
+                        className={`h-full w-full object-cover transition duration-500 ${isActive ? "" : "opacity-70 group-hover:opacity-100"}`}
+                      />
+                      <span
+                        className={`absolute bottom-2 left-2 grid h-7 w-7 place-items-center rounded-full ${isActive ? "bg-lime text-ink" : "bg-black/60 text-white"}`}
+                      >
+                        <PlayIcon className="ml-0.5 h-3.5 w-3.5" />
+                      </span>
                     </span>
-                  </span>
-                  <span className="min-w-0 px-1 pb-1 lg:px-0 lg:pb-0">
-                    <span className={`block text-[11px] uppercase tracking-[0.16em] ${isActive ? "text-lime" : "text-muted"}`}>
-                      {count(index + 1)} · {item.meta}
+                    <span className="min-w-0 px-1 pb-1 lg:px-0 lg:pb-0">
+                      <span className={`block text-[11px] uppercase tracking-[0.16em] ${isActive ? "text-lime" : "text-muted"}`}>
+                        {count(index + 1)} · {item.meta}
+                      </span>
+                      <span className="mt-1.5 line-clamp-2 block text-[15px] leading-snug text-paper/90">{item.title}</span>
                     </span>
-                    <span className="mt-1.5 line-clamp-2 block text-[15px] leading-snug text-paper/90">{item.title}</span>
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-16 bg-gradient-to-t from-ink to-transparent lg:block" />
+        </div>
       </div>
     </section>
   );
