@@ -35,6 +35,10 @@ export const defaultContent: SiteContent = {
         title: "Courses",
         description: "Practical programs on paid media, measurement, and growth systems. The first cohort opens soon.",
       },
+      blog: {
+        title: "Journal",
+        description: "Notes on paid media, measurement, offers, and the weekly habits that make growth repeatable.",
+      },
     },
   },
   profile: {
@@ -64,6 +68,7 @@ export const defaultContent: SiteContent = {
       { label: "Expertise", id: "services" },
       { label: "About", id: "about" },
       { label: "Case studies", id: "cases" },
+      { label: "Journal", href: "/blog" },
       { label: "Courses", href: "/courses" },
     ],
     cta: "Start a project",
@@ -559,8 +564,266 @@ export const defaultContent: SiteContent = {
     cta: "Get notified",
     ctaHref: "mailto:hello@atik.studio?subject=Course%20updates",
   },
-  contact: {
+  blog: {
     index: "08",
+    label: "Journal",
+    title: "Field notes from the work.",
+    intro: "What I test, what I keep, and what I stop doing. Short reads for people who run the numbers.",
+    seeAll: "All articles",
+    pageTitle: "Journal",
+    pageIntro: "Notes on paid media, measurement, offers, and the weekly habits that make growth repeatable.",
+    readLabel: "Read article",
+    featuredLabel: "Featured",
+    moreTitle: "Keep reading",
+    newerLabel: "Newer",
+    olderLabel: "Older",
+    articlesLabel: "Articles",
+    topicsLabel: "Topics",
+    pageLabel: "Page",
+    shareLabel: "Share",
+    writtenBy: "Written by",
+    ctaTitle: "Want this kind of thinking on your numbers?",
+    ctaButton: "Start a project",
+    perPage: 6,
+    posts: [
+      {
+        title: "Fourteen campaigns, one question: which one pays?",
+        slug: "which-campaign-pays",
+        category: "Paid media",
+        date: "2026-10-28",
+        readTime: "7 min read",
+        excerpt:
+          "Most accounts do not have a budget problem. They have a sorting problem. Here is the simple audit I run before touching a single bid.",
+        cover: "/images/northline.jpg",
+        coverAlt: "Apparel store floor with racks of clothing",
+        featured: true,
+        tags: ["Meta ads", "Audit", "Budget"],
+        body: [
+          {
+            text: "When a brand tells me paid social stopped working, I almost never find a broken platform. I find fourteen live campaigns, six audiences that overlap, and nobody who can say which one brought in last month's revenue.\n\nThe fix is not a new creative or a new agency. It is a sorting exercise, and it takes about an afternoon.",
+          },
+          {
+            heading: "Start with the money, not the dashboard",
+            text: "Export ninety days of orders from the store, not from the ad platform. Match them to the last paid touch you can trust. You will see that two or three campaigns carry almost all of the real revenue.\n\nEverything else is either testing, retargeting the same people, or spending because nobody turned it off.",
+            quote: "If you cannot explain why a campaign exists in one sentence, it should not have a budget.",
+            images: [
+              {
+                src: "/images/velour.jpg",
+                alt: "A small, focused set of beauty products laid out on a table",
+                caption: "Two or three campaigns usually carry the real revenue. The rest is shelf space.",
+                link: "/blog/landing-page-cheapest-ad",
+              },
+            ],
+          },
+          {
+            heading: "Collapse, then rebuild",
+            text: "Merge the overlapping audiences. Keep one prospecting campaign, one retargeting campaign, and one clear test. Give each a single job and a single number it is judged by.\n\nFewer campaigns means more data per campaign, which means the algorithm learns faster and your [weekly review](/blog/weekly-growth-review) takes ten minutes instead of an hour.",
+          },
+          {
+            heading: "What usually happens next",
+            text: "Spend goes down for two weeks while learning resets. Then cost per purchase drops, and for the first time the team can answer the question every founder asks: what happens if we add another thousand a day?",
+          },
+        ],
+      },
+      {
+        title: "The GA4 setup I give every new client",
+        slug: "ga4-setup-every-client",
+        category: "Measurement",
+        date: "2026-10-14",
+        readTime: "9 min read",
+        excerpt:
+          "Five events, two audiences, one report. A small, boring GA4 setup that answers the questions people actually ask on Monday morning.",
+        cover: "",
+        coverAlt: "",
+        featured: false,
+        tags: ["GA4", "Tracking", "Reporting"],
+        body: [
+          {
+            text: "GA4 can track almost anything, which is exactly why most setups end up tracking nothing useful. Before adding a single custom event, I write down the five questions the team asks every week.",
+          },
+          {
+            heading: "Five events are enough",
+            text: "View item, add to cart, begin checkout, purchase, and one lead event. Name them the way [GA4's recommended events](https://support.google.com/analytics/answer/9267735) expect so the built-in reports work without extra mapping.\n\nEverything else can wait until someone asks a question these five cannot answer.",
+          },
+          {
+            heading: "One report for the whole team",
+            text: "Build a single exploration with sessions, conversion rate, and revenue by channel group. Pin it. Delete the rest. A report people open every week beats ten reports nobody trusts.",
+            quote: "Good measurement is not more data. It is fewer arguments.",
+          },
+        ],
+      },
+      {
+        title: "Your landing page is the cheapest ad you will ever buy",
+        slug: "landing-page-cheapest-ad",
+        category: "Conversion",
+        date: "2026-09-30",
+        readTime: "6 min read",
+        excerpt:
+          "Doubling conversion rate halves your cost per lead, and it does not need a bigger budget. Three changes I test before raising spend.",
+        cover: "/images/lumen.jpg",
+        coverAlt: "Calm workspace with soft daylight",
+        featured: false,
+        tags: ["Landing pages", "CRO", "Offer"],
+        body: [
+          {
+            text: "Every extra point of conversion rate makes every ad you run cheaper. Yet most teams spend weeks on new creative and minutes on the page the click lands on.",
+          },
+          {
+            heading: "Say the offer in the first screen",
+            text: "Who it is for, what they get, and what happens after they click. If a stranger cannot repeat it back in five seconds, the headline is doing too much.",
+          },
+          {
+            heading: "Remove one field",
+            text: "Every form field is a small reason to leave. Ask for what you need to reply, nothing more. You can learn the rest on the first call.",
+            quote: "The best form is the one people finish.",
+          },
+          {
+            heading: "Show proof near the button",
+            text: "A number, a logo, or one short quote placed right above the call to action does more than a testimonial wall at the bottom of the page.",
+            images: [
+              { src: "/images/kite.jpg", alt: "Customer paying with a phone at a shop counter", caption: "Before: proof sat below the fold." },
+              { src: "/images/lumen.jpg", alt: "Calm reception area", caption: "After: one number right above the button." },
+            ],
+          },
+        ],
+      },
+      {
+        title: "A weekly growth review that takes 30 minutes",
+        slug: "weekly-growth-review",
+        category: "Systems",
+        date: "2026-09-16",
+        readTime: "5 min read",
+        excerpt:
+          "The meeting that replaced three status calls. One page, four numbers, and a rule about what we are allowed to change.",
+        cover: "",
+        coverAlt: "",
+        featured: false,
+        tags: ["Process", "Team", "Reporting"],
+        body: [
+          {
+            text: "Growth rarely stalls because of one bad decision. It stalls because nobody looks at the same numbers at the same time, so small problems get a month to grow.",
+          },
+          {
+            heading: "Four numbers, same order, every week",
+            text: "Spend, cost per result, conversion rate, and revenue. Compare to last week and to the four-week average. Anything that moved more than fifteen percent gets one sentence of explanation.",
+          },
+          {
+            heading: "One change per channel",
+            text: "Each channel owner picks a single change for the coming week and writes down what they expect to happen. Next week we check. That is the whole system.",
+            quote: "A review without a written prediction is just a meeting.",
+          },
+        ],
+      },
+      {
+        title: "Why your best audience is the one you already paid for",
+        slug: "best-audience-already-paid-for",
+        category: "Lifecycle",
+        date: "2026-09-02",
+        readTime: "6 min read",
+        excerpt:
+          "Retention is the growth channel most teams ignore because it is quiet. A simple email and offer plan that lifted repeat orders by a third.",
+        cover: "/images/velour.jpg",
+        coverAlt: "Close-up of a premium product on a soft background",
+        featured: false,
+        tags: ["Email", "Retention", "Offer"],
+        body: [
+          {
+            text: "Acquisition gets the budget and the meetings. Retention gets whatever time is left on Friday. Yet the people who already bought from you are the cheapest sale you will ever make.",
+          },
+          {
+            heading: "Three emails, not thirty",
+            text: "A thank-you that sets expectations, a how-to that helps them get value, and a well-timed second offer based on when people usually reorder. Get those right before building anything bigger.",
+          },
+          {
+            heading: "Time the second offer",
+            text: "Look at your own data for the median days between first and second order. Send the offer a few days before that point, not on a random calendar schedule.",
+          },
+        ],
+      },
+      {
+        title: "How I brief creative so it does not come back wrong",
+        slug: "brief-creative-right",
+        category: "Creative",
+        date: "2026-08-19",
+        readTime: "5 min read",
+        excerpt:
+          "Most weak ads start as weak briefs. The one-page template I use with designers and video editors, and why it starts with the customer's words.",
+        cover: "",
+        coverAlt: "",
+        featured: false,
+        tags: ["Creative", "Briefing", "Ads"],
+        body: [
+          {
+            text: "When creative misses, the team blames the designer. Usually the brief asked for everything and decided nothing.",
+          },
+          {
+            heading: "Start with a real customer sentence",
+            text: "Pull one line from a review, a sales call, or a support ticket. Put it at the top of the brief. It tells the designer who the ad is for better than any persona document.",
+            quote: "Your customer already wrote your best headline. You just have to find it.",
+          },
+          {
+            heading: "One job per ad",
+            text: "Stop the scroll, explain the offer, or handle an objection. Pick one. Ads that try to do all three end up doing none of them well.",
+          },
+        ],
+      },
+      {
+        title: "Local search that sounds like the brand",
+        slug: "local-search-brand-voice",
+        category: "SEO",
+        date: "2026-08-05",
+        readTime: "8 min read",
+        excerpt:
+          "Ranking for the right local terms without filling the site with copy nobody would say out loud. What worked for a multi-location clinic.",
+        cover: "/images/kite.jpg",
+        coverAlt: "City street with shopfronts at dusk",
+        featured: false,
+        tags: ["SEO", "Local", "Content"],
+        body: [
+          {
+            text: "Local SEO advice often ends with pages that read like they were written for a robot. They might rank for a while, but they do not convert, and the brand team hates them.",
+          },
+          {
+            heading: "One strong page per location",
+            text: "Real photos, real staff names, opening hours, parking, and the three questions people ask on the phone. That page will outrank a dozen thin ones.",
+          },
+          {
+            heading: "Write the way the front desk talks",
+            text: "Ask the people who answer the phone how patients describe their problem. Use those words in headings. It helps rankings and it sounds like a human wrote it, because one did.",
+          },
+        ],
+      },
+      {
+        title: "The trial users who meant it",
+        slug: "trial-users-who-meant-it",
+        category: "SaaS",
+        date: "2026-07-22",
+        readTime: "7 min read",
+        excerpt:
+          "More sign-ups made the numbers look good and the sales team miserable. How we traded volume for intent and grew paid conversions.",
+        cover: "",
+        coverAlt: "",
+        featured: false,
+        tags: ["SaaS", "Trials", "Qualification"],
+        body: [
+          {
+            text: "Cheap trial sign-ups are easy to buy. The question is how many of them ever open the product a second time.",
+          },
+          {
+            heading: "Optimize for the second session",
+            text: "We changed the conversion event from sign-up to a meaningful action inside the product. Volume dropped by a third. Paid conversions went up.",
+            quote: "The platform will find you exactly what you ask for. Ask for the right thing.",
+          },
+          {
+            heading: "Add one honest question",
+            text: "A single question on the sign-up form about team size let sales focus on the accounts that could actually buy, and let the product handle the rest.",
+          },
+        ],
+      },
+    ],
+  },
+  contact: {
+    index: "09",
     label: "Contact",
     title: "Tell me what you want to grow.",
     lede: "A short note is enough. I read every one and reply myself.",
@@ -620,6 +883,7 @@ export const defaultContent: SiteContent = {
     { id: "testimonials", enabled: true },
     { id: "cases", enabled: true },
     { id: "videos", enabled: true },
+    { id: "blog", enabled: true },
     { id: "contact", enabled: true },
   ],
 };

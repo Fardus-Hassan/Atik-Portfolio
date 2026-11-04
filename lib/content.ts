@@ -6,6 +6,7 @@
  */
 
 export type {
+  BlogPost,
   BrandLogo,
   CaseStudy,
   Icon,

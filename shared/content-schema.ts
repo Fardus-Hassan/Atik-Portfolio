@@ -23,6 +23,7 @@ export const moduleIds = [
   "testimonials",
   "cases",
   "videos",
+  "blog",
   "contact",
 ] as const;
 
@@ -89,6 +90,50 @@ const ServiceSchema = z.object({
     .meta({ title: "Detail view" }),
 });
 
+const BlogPostSchema = z
+  .object({
+    title: text("Title"),
+    slug: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers, and dashes.")
+      .meta({ title: "Slug", description: "The link: /blog/your-slug. Lowercase, dashes, no spaces." }),
+    category: text("Category"),
+    date: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Use the format 2026-10-24.")
+      .meta({ title: "Publish date", description: "Like 2026-10-24. Newest posts show first." }),
+    readTime: text("Read time", "Like 6 min read."),
+    excerpt: long("Excerpt", "One or two sentences. Shown on cards and in search results."),
+    cover: image("Cover image", "Wide, 3:2. Leave empty for a text cover."),
+    coverAlt: text("Cover description (alt text)"),
+    featured: z.boolean().meta({ title: "Feature on top", description: "The newest featured post gets the large card." }),
+    tags: list(text("Tag"), "Tags"),
+    body: list(
+      z.object({
+        heading: text("Heading").optional(),
+        text: long(
+          "Text",
+          "Leave an empty line between paragraphs. Add a link like [link text](https://example.com) or [contact me](/#contact).",
+        ),
+        quote: text("Pull quote", "Optional. Shown large after the text. Links work here too.").optional(),
+        images: list(
+          z
+            .object({
+              src: image("Image", "One image shows full width. Two or more sit side by side."),
+              alt: text("Image description (alt text)"),
+              caption: text("Caption", "Optional. Shown under the image. Links work here too.").optional(),
+              link: text("Link", "Optional. Opens when the image is clicked. A page like /blog or a full URL.").optional(),
+            })
+            .meta({ title: "Image" }),
+          "Images",
+          "Reference images, screenshots, or charts. Shown after the text.",
+        ).optional(),
+      }),
+      "Article sections",
+    ),
+  })
+  .meta({ title: "Post" });
+
 const SocialSchema = z.object({
   platform: text("Platform key", "linkedin, facebook, instagram, youtube, tiktok, x, whatsapp, email, or any new name."),
   label: text("Label"),
@@ -119,6 +164,7 @@ export const SiteContentSchema = z.object({
           cases: PageSeoSchema.meta({ title: "Case studies page" }),
           clients: PageSeoSchema.meta({ title: "Clients page" }),
           courses: PageSeoSchema.meta({ title: "Courses page" }),
+          blog: PageSeoSchema.meta({ title: "Blog page" }),
         })
         .meta({ title: "Pages" }),
     })
@@ -273,6 +319,39 @@ export const SiteContentSchema = z.object({
       ),
     })
     .meta({ title: "Videos" }),
+  blog: z
+    .object({
+      index: text("Number"),
+      label: text("Label"),
+      title: text("Home title"),
+      intro: long("Intro"),
+      seeAll: text("See all label"),
+      pageTitle: text("Blog page heading"),
+      pageIntro: long("Blog page intro"),
+      readLabel: text("Read label", "Like Read article."),
+      featuredLabel: text("Featured label"),
+      moreTitle: text("More posts heading", "Shown under each article."),
+      newerLabel: text("Newer page label"),
+      olderLabel: text("Older page label"),
+      articlesLabel: text("Articles count label"),
+      topicsLabel: text("Topics count label"),
+      pageLabel: text("Page count label"),
+      shareLabel: text("Share label"),
+      writtenBy: text("Author label", "Like Written by."),
+      ctaTitle: text("Article end: title", "Shown at the end of every article."),
+      ctaButton: text("Article end: button"),
+      perPage: z.number().int().min(3).max(24).meta({ title: "Posts per page" }),
+      posts: list(BlogPostSchema, "Posts").superRefine((posts, ctx) => {
+        const seen = new Set<string>();
+        posts.forEach((post, index) => {
+          if (seen.has(post.slug)) {
+            ctx.addIssue({ code: "custom", path: [index, "slug"], message: "Another post already uses this slug." });
+          }
+          seen.add(post.slug);
+        });
+      }),
+    })
+    .meta({ title: "Blog" }),
   courses: z
     .object({
       label: text("Label"),
@@ -334,6 +413,7 @@ export type ModuleId = (typeof moduleIds)[number];
 export type Icon = z.infer<typeof IconSchema>;
 export type NavLink = SiteContent["nav"]["links"][number];
 export type VideoItem = SiteContent["videos"]["items"][number];
+export type BlogPost = SiteContent["blog"]["posts"][number];
 export type CaseStudy = SiteContent["work"]["items"][number];
 export type ServiceItem = SiteContent["services"]["items"][number];
 export type BrandLogo = SiteContent["marquee"]["items"][number];

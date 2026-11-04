@@ -3,7 +3,7 @@
 import { useRef, type ReactNode } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 
-export const gutter = "px-4 sm:px-6 md:px-10 lg:px-14";
+export { gutter } from "@/lib/layout";
 
 export function SectionLabel({
   index,

@@ -6,6 +6,7 @@ export const sectionGroups: { title: string; keys: SectionKey[] }[] = [
     title: "Home page",
     keys: ["hero", "marquee", "about", "services", "work", "achievements", "testimonials", "cases", "videos", "contact"],
   },
+  { title: "Blog", keys: ["blog"] },
   { title: "Other pages", keys: ["courses"] },
 ];
 
@@ -21,6 +22,7 @@ export const sectionNotes: Partial<Record<SectionKey, string>> = {
   work: "Case studies shown on the home page and the cases page.",
   testimonials: "Client reviews.",
   videos: "YouTube videos.",
+  blog: "Write and edit posts. Also the home section and the blog page text.",
   contact: "Contact section text and form labels.",
 };
 

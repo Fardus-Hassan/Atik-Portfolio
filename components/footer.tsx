@@ -1,6 +1,7 @@
 import type { SiteContent } from "@/lib/content";
 import { SocialIcon } from "@/components/social-icon";
-import { DownloadIcon, gutter } from "@/components/ui";
+import { DownloadIcon } from "@/components/ui";
+import { gutter } from "@/lib/layout";
 
 export function Footer({ content }: { content: SiteContent }) {
   const { profile, footer, socials } = content;

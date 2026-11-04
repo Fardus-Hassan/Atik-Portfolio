@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import type { CaseStudy, DetailView, ServiceItem, SiteContent } from "@/lib/content";
 import { About } from "@/components/about";
+import { Blog } from "@/components/blog";
 import { Contact } from "@/components/contact";
 import { DetailOverlay } from "@/components/detail-overlay";
 import { Achievements } from "@/components/achievements";
@@ -104,6 +105,8 @@ export function HomeView({ content }: { content: SiteContent }) {
                   );
                 case "videos":
                   return <Videos key={module.id} videos={content.videos} />;
+                case "blog":
+                  return <Blog key={module.id} blog={content.blog} />;
                 case "contact":
                   return (
                     <Contact key={module.id} contact={content.contact} email={content.profile.email} />

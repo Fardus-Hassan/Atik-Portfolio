@@ -22,7 +22,19 @@ function mergeDefaults(base: Json, saved: Json): Json {
 
 export { isSectionKey };
 
-function resolveSection<K extends SectionKey>(key: K, saved: Json): SiteContent[K] {
+/** Home sections added to the schema later are inserted at their default position. */
+function withAllModules(saved: Json): Json {
+  if (!Array.isArray(saved)) return saved;
+  const result = [...saved];
+  const present = new Set(result.map((item) => (isPlainObject(item) ? item.id : undefined)));
+  defaultContent.modules.forEach((module, index) => {
+    if (!present.has(module.id)) result.splice(Math.min(index, result.length), 0, module);
+  });
+  return result;
+}
+
+function resolveSection<K extends SectionKey>(key: K, rawSaved: Json): SiteContent[K] {
+  const saved = key === "modules" ? withAllModules(rawSaved) : rawSaved;
   const schema = SiteContentSchema.shape[key];
   const direct = schema.safeParse(saved);
   if (direct.success) return direct.data as SiteContent[K];
